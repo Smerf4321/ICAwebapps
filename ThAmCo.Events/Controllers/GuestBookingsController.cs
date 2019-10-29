@@ -25,6 +25,13 @@ namespace ThAmCo.Events.Controllers
             return View(await eventsDbContext.ToListAsync());
         }
 
+        // GET: GuestBookings
+        public async Task<IActionResult> Index(int id)
+        {
+            var eventsDbContext = _context.Guests.Include(g => g.Customer).Include(g => g.Event).Where(g => g.EventId == id);
+            return View(await eventsDbContext.ToListAsync());
+        }
+
         // GET: GuestBookings/Details/5
         public async Task<IActionResult> Details(int? eventId, int? customerId)
         {
