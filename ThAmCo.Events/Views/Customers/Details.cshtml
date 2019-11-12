@@ -1,4 +1,4 @@
-﻿@model ThAmCo.Events.Data.Customer
+﻿@model ThAmCo.Events.ViewModels.CustomerVM;
 
 @{
     ViewData["Title"] = "Details";
@@ -37,7 +37,7 @@
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Event)
+                        @Html.DisplayFor(modelItem => item.EventTitle)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Attended)
