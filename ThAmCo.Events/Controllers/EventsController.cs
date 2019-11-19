@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ThAmCo.Events.Data;
+using ThAmCo.Events.ViewModels;
 
 namespace ThAmCo.Events.Controllers
 {
@@ -53,15 +54,22 @@ namespace ThAmCo.Events.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Date,Duration,TypeId")] Event @event)
+        public async Task<IActionResult> Create([Bind("Title,Date,Duration,TypeId")] EventCreateVM eventVm)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(@event);
+                var addEvent = new Event() {
+                    Title = eventVm.Title,
+                    Date = eventVm.Date,
+                    Duration = eventVm.Duration,
+                    TypeId = eventVm.TypeId
+                };
+
+                _context.Add(addEvent);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(@event);
+            return View(eventVm);
         }
 
         // GET: Events/Edit/5

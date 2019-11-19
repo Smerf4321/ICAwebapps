@@ -7,10 +7,8 @@ using ThAmCo.Events.Data;
 
 namespace ThAmCo.Events.ViewModels
 {
-    public class EventVM
+    public class EventCreateVM
     {
-        public int Id { get; set; }
-
         [Required]
         public string Title { get; set; }
 
@@ -20,7 +18,5 @@ namespace ThAmCo.Events.ViewModels
 
         [Required, MaxLength(3), MinLength(3)]
         public string TypeId { get; set; }
-
-        public List<GuestBooking> Bookings { get; set; }
     }
 }

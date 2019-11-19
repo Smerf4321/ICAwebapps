@@ -7,13 +7,12 @@ namespace ThAmCo.Events.ViewModels
 {
     public class GuestBookingVM
     {
-        public int CustomerId { get; set; }
+        [Required]
+        public string EventTitle { get; set; }
 
-        public int EventId { get; set; }
+        public int CustomerId { get; set; }
 
         public bool Attended { get; set; }
 
-        [Required]
-        public string EventTitle { get; set; }
     }
 }

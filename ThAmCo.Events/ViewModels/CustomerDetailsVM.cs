@@ -5,7 +5,7 @@ using ThAmCo.Events.Data;
 
 namespace ThAmCo.Events.ViewModels
 {
-    public class CustomerVM
+    public class CustomerDetailsVM
     {
         public int Id { get; set; }
 
@@ -22,8 +22,5 @@ namespace ThAmCo.Events.ViewModels
         public string Email { get; set; }
 
         public List<GuestBookingVM> Bookings { get; set; }
-
-        [Required]
-        public string Title { get; set; }
     }
 }

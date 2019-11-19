@@ -1,4 +1,4 @@
-﻿@model ThAmCo.Events.ViewModels.CustomerVM;
+﻿@model ThAmCo.Events.ViewModels.CustomerDetailsVM;
 
 @{
     ViewData["Title"] = "Details";
@@ -32,6 +32,17 @@
 </div>
 <div>
     <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Bookings.FirstOrDefault().EventTitle)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Bookings.FirstOrDefault().Attended)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
         <tbody>
             @foreach (var item in Model.Bookings)
             {

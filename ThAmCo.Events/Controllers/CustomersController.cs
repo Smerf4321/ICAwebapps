@@ -36,14 +36,14 @@ namespace ThAmCo.Events.Controllers
             var customer = _context.Customers
                 .Include(p => p.Bookings);
 
-            var customerVM = customer
-                .Select(m => new ViewModels.CustomerVM
+            var customerDetailsVM = await customer
+                .Select(m => new ViewModels.CustomerDetailsVM
                 {
                     Surname = m.Surname,
                     FirstName = m.FirstName,
                     Email = m.Email,
                     Bookings = m.Bookings.Select(b => new ViewModels.GuestBookingVM {
-                        CustomerId = b.CustomerId, Attended = b.Attended, EventId = b.EventId,EventTitle = b.Event.Title
+                        CustomerId = b.CustomerId, Attended = b.Attended, EventTitle = b.Event.Title
                     }).ToList()
                 }).FirstOrDefaultAsync();
 
@@ -52,7 +52,7 @@ namespace ThAmCo.Events.Controllers
                 return NotFound();
             }
 
-            return View(customerVM);
+            return View(customerDetailsVM);
         }
 
         // GET: Customers/Create
