@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ThAmCo.Events.Data;
+using ThAmCo.Events.ViewModels;
 
 namespace ThAmCo.Events.Controllers
 {
@@ -29,6 +30,7 @@ namespace ThAmCo.Events.Controllers
         public async Task<IActionResult> EventIndex(int id)
         {
             var eventsDbContext = _context.Guests.Include(g => g.Customer).Include(g => g.Event).Where(g => g.EventId == id);
+            ViewData["GuestCount"] = eventsDbContext.Count();
             return View("Index",await eventsDbContext.ToListAsync());
         }
 
@@ -53,10 +55,12 @@ namespace ThAmCo.Events.Controllers
         }
 
         // GET: GuestBookings/Create
-        public IActionResult Create()
+        public IActionResult Create(int? eventID)
         {
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Email");
             ViewData["EventId"] = new SelectList(_context.Events, "Id", "Title");
+
+            ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Email");
+
             return View();
         }
 
@@ -71,11 +75,11 @@ namespace ThAmCo.Events.Controllers
             {
                 _context.Add(guestBooking);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(EventIndex) + "/" + guestBooking.EventId);
             }
             ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Email", guestBooking.CustomerId);
             ViewData["EventId"] = new SelectList(_context.Events, "Id", "Title", guestBooking.EventId);
-            return View(guestBooking);
+            return View("EventIndex");
         }
 
         // GET: GuestBookings/Edit/5
