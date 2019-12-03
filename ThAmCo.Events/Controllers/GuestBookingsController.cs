@@ -29,6 +29,8 @@ namespace ThAmCo.Events.Controllers
         // GET: GuestBookings
         public async Task<IActionResult> EventIndex(int id)
         {
+            ViewData["EventId"] = id;
+
             var eventsDbContext = _context.Guests.Include(g => g.Customer).Include(g => g.Event).Where(g => g.EventId == id);
             ViewData["GuestCount"] = eventsDbContext.Count();
             return View("Index",await eventsDbContext.ToListAsync());
@@ -57,9 +59,9 @@ namespace ThAmCo.Events.Controllers
         // GET: GuestBookings/Create
         public IActionResult Create(int? eventID)
         {
-            ViewData["EventId"] = new SelectList(_context.Events, "Id", "Title");
+            ViewData["EventId"] = new SelectList(_context.Events.Where(e => e.Id == eventID), "Id", "Title");
 
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Email");
+            ViewData["CustomerId"] = new SelectList(_context.Customers., "Id", "Email");
 
             return View();
         }
