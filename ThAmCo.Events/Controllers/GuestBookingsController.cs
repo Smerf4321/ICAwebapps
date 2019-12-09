@@ -32,7 +32,6 @@ namespace ThAmCo.Events.Controllers
             ViewData["EventId"] = id;
 
             var eventsDbContext = _context.Guests.Include(g => g.Customer).Include(g => g.Event).Where(g => g.EventId == id);
-            ViewData["GuestCount"] = eventsDbContext.Count();
             return View("Index",await eventsDbContext.ToListAsync());
         }
 
@@ -61,7 +60,7 @@ namespace ThAmCo.Events.Controllers
         {
             ViewData["EventId"] = new SelectList(_context.Events.Where(e => e.Id == eventID), "Id", "Title");
 
-            ViewData["CustomerId"] = new SelectList(_context.Customers., "Id", "Email");
+            ViewData["CustomerId"] = new SelectList(_context.Customers.Where(c => !_context.Guests.Where(g => g.EventId == eventID).Any(g => g.CustomerId == c.Id)), "Id", "Email");
 
             return View();
         }
@@ -140,17 +139,12 @@ namespace ThAmCo.Events.Controllers
         }
 
         // GET: GuestBookings/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int eventid, int customerid)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var guestBooking = await _context.Guests
                 .Include(g => g.Customer)
                 .Include(g => g.Event)
-                .FirstOrDefaultAsync(m => m.CustomerId == id);
+                .FirstOrDefaultAsync(m => m.CustomerId == customerid && m.EventId == eventid);
             if (guestBooking == null)
             {
                 return NotFound();
@@ -162,12 +156,12 @@ namespace ThAmCo.Events.Controllers
         // POST: GuestBookings/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int EventId, int CustomerId)
         {
-            var guestBooking = await _context.Guests.FindAsync(id);
+            var guestBooking = await _context.Guests.FirstOrDefaultAsync(g => g.EventId == EventId && g.CustomerId == CustomerId);
             _context.Guests.Remove(guestBooking);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(EventIndex), new { id = EventId });
         }
 
         private bool GuestBookingExists(int id)

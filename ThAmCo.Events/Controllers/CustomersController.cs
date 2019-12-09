@@ -34,6 +34,7 @@ namespace ThAmCo.Events.Controllers
             }
 
             var customer = _context.Customers
+                .Where(c => c.Id == id)
                 .Include(p => p.Bookings);
 
             var customerDetailsVM = await customer

@@ -6,10 +6,9 @@
 
 <h2>Index</h2>
 
-@ViewData["EventId"]
-
 <p>
-    <div>Number of guests booked:  @ViewData["GuestBooking"]</div>
+    <div>Total guests booked:  @Model.ToList().Count</div>
+    <div>Guests Atended:  @Model.Where(m => m.Attended).ToList().Count</div>
     <div><a asp-action="Create" asp-route-eventId="@ViewData["EventId"]">Create New</a></div>
 </p>
 <table class="table">
@@ -41,9 +40,7 @@
                     @Html.DisplayFor(modelItem => item.Attended)
                 </td>
                 <td>
-                    <!--<a asp-action="Edit" asp-route-eventid="@item.EventId" asp-route-customerid="@item.CustomerId">Edit</a> |
-                    <a asp-action="Details" asp-route-eventid="@item.EventId" asp-route-customerid="@item.CustomerId">Details</a> |
-                    <a asp-action="Delete" asp-route-eventid="@item.EventId" asp-route-customerid="@item.CustomerId">Delete</a> -->
+                    <a asp-action="Delete" asp-route-eventid="@item.EventId" asp-route-customerid="@item.CustomerId">Delete</a>
                 </td>
             </tr>
         }
