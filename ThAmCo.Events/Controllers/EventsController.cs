@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -150,6 +152,49 @@ namespace ThAmCo.Events.Controllers
             _context.Events.Remove(@event);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+        
+        public async Task<IActionResult> ReserveVenue(int id)
+        {
+            var @event = await _context.Events.FirstOrDefaultAsync(m => m.Id == id);
+            if (@event == null)
+            {
+                return NotFound();
+            }
+
+            HttpClient client = new HttpClient();
+
+            var Builder = new UriBuilder("http://localhost");
+            Builder.Port = 23652;
+            Builder.Path = "api/Availability";
+            var query = HttpUtility.ParseQueryString(Builder.Query);
+            query["eventType"] = @event.TypeId;
+            query["beginDate"] = @event.Date.ToString("yyyy/MM/dd HH:mm:ss");
+            query["endDate"] = @event.Date.Add(@event.Duration.Value).ToString("yyyy/MM/dd HH:mm:ss");
+
+            Builder.Query = query.ToString();
+            string url = Builder.ToString();
+
+            client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
+
+            HttpResponseMessage response = await client.GetAsync(url);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var venueList = await response.Content.ReadAsAsync<IEnumerable<Venue>>();
+                if (venueList.Count() == 0)
+                {
+                    ModelState.AddModelError("", "No suitable venues found");
+                }
+
+                ViewData["venues"] = new SelectList(venueList, "Code", "Name");
+                return View();
+            }
+            else
+            {
+                ModelState.AddModelError("", "Service Unavailable");
+            }
+            return View();
         }
 
         private bool EventExists(int id)
