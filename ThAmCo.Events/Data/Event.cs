@@ -20,6 +20,8 @@ namespace ThAmCo.Events.Data
 
         public List<GuestBooking> Bookings { get; set; }
 
+        public List<EventStaffing> Staffing { get; set; }
+
         public string venueRef { get; set; }
     }
 }
