@@ -32,8 +32,8 @@ namespace ThAmCo.Events.Controllers
                 return NotFound();
             }
 
-            var staff = await _context.Staff
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var staff = await _context.Staff.Include(s => s.Staffing).ThenInclude(s => s.Event).FirstOrDefaultAsync(m => m.Id == id);
+
             if (staff == null)
             {
                 return NotFound();

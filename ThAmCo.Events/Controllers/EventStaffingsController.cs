@@ -31,13 +31,13 @@ namespace ThAmCo.Events.Controllers
 
             var eventsDbContext = _context.EventStaffing.Include(e => e.Staff).Include(e => e.Event).Where(e => e.EventId == id);
 
-            var minStaff = _context.EventStaffing.Include(e => e.Event.Bookings).Where(e => e.EventId == id).Count();
+            var eve = await _context.Events.Include(e => e.Bookings).FirstOrDefaultAsync(e => e.Id == id);
 
-            if (!eventsDbContext.Select(s => s.Staff.FirstAider).Contains(true))
+            if (eventsDbContext.Select(s => s.Staff.FirstAider).Count() == 0)
             {
                 ModelState.AddModelError("", "No first aider");
             }
-            if (!((eventsDbContext.Select(s => s.Staff).Count()*10) >= minStaff))
+            if (!((eventsDbContext.Select(s => s.Staff).Count() * 10) >= eve.Bookings.Count()))
             {
                 ModelState.AddModelError("", "Not enough staff assigned");
             }

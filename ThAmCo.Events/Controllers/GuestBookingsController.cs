@@ -57,9 +57,9 @@ namespace ThAmCo.Events.Controllers
         }
 
         // GET: GuestBookings/Create
-        public IActionResult Create(int? eventID)
+        public IActionResult Create(int eventID)
         {
-            ViewData["EventId"] = new SelectList(_context.Events.Where(e => e.Id == eventID), "Id", "Title");
+            ViewData["EventId"] = eventID;
 
             ViewData["CustomerId"] = new SelectList(_context.Customers.Where(c => !_context.Guests.Where(g => g.EventId == eventID).Any(g => g.CustomerId == c.Id)), "Id", "Email");
 
@@ -71,7 +71,7 @@ namespace ThAmCo.Events.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CustomerId,EventId,Attended")] GuestBooking guestBooking)
+        public async Task<IActionResult> Create([Bind("CustomerId,EventId,False")] GuestBooking guestBooking)
         {
             if (ModelState.IsValid)
             {

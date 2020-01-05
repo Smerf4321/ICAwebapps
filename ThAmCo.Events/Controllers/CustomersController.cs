@@ -37,21 +37,24 @@ namespace ThAmCo.Events.Controllers
                 .Where(c => c.Id == id)
                 .Include(p => p.Bookings);
 
+            if (customer == null)
+            {
+                return NotFound();
+            }
+
             var customerDetailsVM = await customer
                 .Select(m => new ViewModels.CustomerDetailsVM
                 {
                     Surname = m.Surname,
                     FirstName = m.FirstName,
                     Email = m.Email,
-                    Bookings = m.Bookings.Select(b => new ViewModels.GuestBookingVM {
-                        CustomerId = b.CustomerId, Attended = b.Attended, EventTitle = b.Event.Title
+                    Bookings = m.Bookings.Select(b => new ViewModels.GuestBookingVM
+                    {
+                        CustomerId = b.CustomerId,
+                        Attended = b.Attended,
+                        EventTitle = b.Event.Title
                     }).ToList()
                 }).FirstOrDefaultAsync();
-
-            if (customer == null)
-            {
-                return NotFound();
-            }
 
             return View(customerDetailsVM);
         }

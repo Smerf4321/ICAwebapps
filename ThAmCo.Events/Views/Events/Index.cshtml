@@ -25,11 +25,16 @@
             <th>
                 @Html.DisplayNameFor(model => model.TypeId)
             </th>
+            <th>
+                Warnings
+            </th>
             <th></th>
+
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model)
+{
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Title)
@@ -44,6 +49,18 @@
                 @Html.DisplayFor(modelItem => item.TypeId)
             </td>
             <td>
+                @{
+                    if (item.Staffing.Count() <= item.Bookings.Count() / 10)
+                    {
+                        <p>Not enough staff assigned</p>
+                    }
+                    if (item.Staffing.Where(s => s.Staff.FirstAider).Count() == 0)
+                    {
+                        <p>No first aiders assigned</p>
+                    }
+                }
+            </td>
+            <td>
                 <a asp-controller="GuestBookings" asp-action="EventIndex" asp-route-id="@item.Id">Guest List</a> |
                 <a asp-controller="EventStaffings" asp-action="EventIndex" asp-route-id="@item.Id">Staff List</a> |
                 <a asp-action="ReserveVenue" asp-route-id="@item.Id">Reserve Venue</a> |
@@ -51,6 +68,7 @@
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
+
         </tr>
 }
     </tbody>
