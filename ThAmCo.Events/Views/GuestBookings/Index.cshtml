@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h2>Index</h2>
+<h3>@ViewData["EventName"]</h3>
 
 <p>
     <div>Total guests booked:  @Model.ToList().Count</div>
@@ -15,7 +15,13 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Customer)
+                @Html.DisplayNameFor(model => model.Customer.Surname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customer.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customer.Email)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Event)
@@ -29,20 +35,27 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Customer.Email)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Event.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Attended)
-                </td>
-                <td>
-                    <a asp-action="Delete" asp-route-eventid="@item.EventId" asp-route-customerid="@item.CustomerId">Delete</a>
-                </td>
-            </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Customer.Surname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Customer.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Customer.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Event.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Attended)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-eventid="@item.EventId" asp-route-customerid="@item.CustomerId" >Edit</a> |
+                <a asp-action="Delete" asp-route-eventid="@item.EventId" asp-route-customerid="@item.CustomerId">Delete</a>
+            </td>
+        </tr>
         }
     </tbody>
 </table>

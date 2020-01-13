@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h2>Index</h2>
+    <h3>@ViewData["EventName"]</h3>
 
 @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
@@ -41,7 +41,6 @@
                     @Html.DisplayFor(modelItem => item.Staff.FirstAider)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                     <a asp-action="Delete" asp-route-eventid="@item.EventId" asp-route-staffid="@item.StaffId">Delete</a>
                 </td>
             </tr>

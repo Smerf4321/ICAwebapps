@@ -28,6 +28,7 @@ namespace ThAmCo.Events.Controllers
         public async Task<IActionResult> EventIndex(int id)
         {
             ViewData["EventId"] = id;
+            ViewData["EventName"] = _context.Events.FirstOrDefault(e => e.Id == id).Title;
 
             var eventsDbContext = _context.EventStaffing.Include(e => e.Staff).Include(e => e.Event).Where(e => e.EventId == id);
 

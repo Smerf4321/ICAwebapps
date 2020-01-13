@@ -30,6 +30,7 @@ namespace ThAmCo.Events.Controllers
         public async Task<IActionResult> EventIndex(int id)
         {
             ViewData["EventId"] = id;
+            ViewData["EventName"] = _context.Events.FirstOrDefault(e => e.Id == id).Title;
 
             var eventsDbContext = _context.Guests.Include(g => g.Customer).Include(g => g.Event).Where(g => g.EventId == id);
 
@@ -107,13 +108,8 @@ namespace ThAmCo.Events.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CustomerId,EventId,Attended")] GuestBooking guestBooking)
+        public async Task<IActionResult> Edit([Bind("CustomerId,EventId,Attended")] GuestBooking guestBooking)
         {
-            if (id != guestBooking.CustomerId)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
                 try
@@ -132,11 +128,9 @@ namespace ThAmCo.Events.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(EventIndex), new { id = guestBooking.EventId });
             }
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Email", guestBooking.CustomerId);
-            ViewData["EventId"] = new SelectList(_context.Events, "Id", "Title", guestBooking.EventId);
-            return View(guestBooking);
+            return RedirectToAction(nameof(EventIndex), new { id = guestBooking.EventId });
         }
 
         // GET: GuestBookings/Delete/5
