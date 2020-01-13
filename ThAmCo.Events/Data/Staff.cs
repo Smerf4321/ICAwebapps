@@ -11,12 +11,14 @@ namespace ThAmCo.Events.Data
         public string Surname { get; set; }
 
         [Required]
+        [Display(Name = "First Name")]
         public string FirstName { get; set; }
 
         [Required]
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
 
+        [Display(Name = "First Aider")]
         public bool FirstAider { get; set; }
 
         public List<EventStaffing> Staffing { get; set; }

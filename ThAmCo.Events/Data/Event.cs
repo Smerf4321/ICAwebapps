@@ -16,12 +16,14 @@ namespace ThAmCo.Events.Data
         public TimeSpan? Duration { get; set; }
 
         [Required, MaxLength(3), MinLength(3)]
+        [Display(Name = "Event Type")]
         public string TypeId { get; set; }
 
         public List<GuestBooking> Bookings { get; set; }
 
         public List<EventStaffing> Staffing { get; set; }
 
+        [Display(Name = "Venue Reference")]
         public string venueRef { get; set; }
     }
 }

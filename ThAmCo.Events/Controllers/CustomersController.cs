@@ -156,7 +156,9 @@ namespace ThAmCo.Events.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var customer = await _context.Customers.FindAsync(id);
-            _context.Customers.Remove(customer);
+            customer.FirstName = "REDACTED";
+            customer.Surname = "REDACTED";
+            customer.Email = "RED@CT.ED";
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

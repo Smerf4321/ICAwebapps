@@ -150,7 +150,34 @@ namespace ThAmCo.Events.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var @event = await _context.Events.FindAsync(id);
-            _context.Events.Remove(@event);
+
+            if (@event.venueRef != null)
+            {
+                HttpClient venueClient = new HttpClient();
+
+                var builder = new UriBuilder("http://localhost");
+                builder.Port = 23652;
+                builder.Path = "api/Reservations/" + @event.venueRef;
+
+                string url = builder.ToString();
+
+                venueClient.DefaultRequestHeaders.Accept.ParseAdd("application/json");
+
+                var venuesResponse = await venueClient.DeleteAsync(url);
+
+                if (!venuesResponse.IsSuccessStatusCode)
+                {
+                    ModelState.AddModelError("", "Service unavailable");
+                    return RedirectToAction(nameof(ReserveVenue), @event.Id);
+                }
+
+                @event.venueRef = null;
+                _context.Update(@event);
+                await _context.SaveChangesAsync();
+            }
+
+            var evetStaffing = await _context.EventStaffing.FindAsync(id);
+            _context.EventStaffing.RemoveRange(_context.EventStaffing.Where(s => s.EventId == id));
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
